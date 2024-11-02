@@ -1,4 +1,4 @@
-programa ejemplo
+programa Ejercicio4
 procesos
   proceso recibirCantFlores (ES cant1:numero;ES cant2:numero;ES cant3:numero;ES cant4:numero)
   variables
