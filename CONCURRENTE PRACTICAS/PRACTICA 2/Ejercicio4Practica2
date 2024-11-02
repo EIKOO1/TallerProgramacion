@@ -1,0 +1,167 @@
+programa ejemplo
+procesos
+  proceso recibirCantFlores (ES cant1:numero;ES cant2:numero;ES cant3:numero;ES cant4:numero)
+  variables
+    quienSoy:numero
+  comenzar
+    repetir 4
+      RecibirMensaje(quienSoy,*)
+      si (quienSoy=1)
+        RecibirMensaje(cant1,r1)
+      sino
+        si(quienSoy=2)
+          RecibirMensaje(cant2,r2)
+        sino
+          si (quienSoy=3)
+            RecibirMensaje(cant3,r3)
+          sino
+            si(quienSoy=4)
+              RecibirMensaje(cant4,r4)
+  fin
+  proceso finalizarRobots
+  comenzar
+    EnviarMensaje(F,r1)
+    EnviarMensaje(F,r2)
+    EnviarMensaje(F,r3)
+    EnviarMensaje(F,r4)
+  fin
+  proceso calcularMax(E cant1:numero;E cant2:numero;E cant3:numero;E cant4:numero;ES maxRobot:numero)
+  variables
+    max:numero
+  comenzar
+    max:=-1
+    si(cant1>max)
+      max:=cant1
+      maxRobot:=1
+    si(cant2>max)
+      max:=cant2
+      maxRobot:=2
+    si(cant3>max)
+      max:=cant3
+      maxRobot:=3
+    si(cant4>max)
+      max:=cant4
+      maxRobot:=4  
+  fin
+  proceso avisar (E id:numero;E ok:boolean)
+  comenzar
+    si (id = 1)
+      EnviarMensaje(ok,r1)
+    sino
+      si(id=2)
+        EnviarMensaje(ok,r2)
+      sino
+        si (id=3)
+          EnviarMensaje(ok,r3)
+        sino
+          si(id=4)
+            EnviarMensaje(ok,r4)
+  fin
+  proceso juntar(ES cant:numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      cant:=cant+1
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      cant:=cant+1
+  fin
+  proceso entrar(ES cant:numero)
+  variables
+    avIni,calleIni:numero
+    av,calle:numero
+  comenzar
+    avIni:= PosAv
+    calleIni:=PosCa
+    Random(av,25,75)
+    Random(calle,25,75)
+    Pos(av,calle)
+    juntar(cant)
+    Pos(avIni,calleIni)
+  fin
+areas
+  area1: AreaP(25,1,25,1)
+  area2:AreaP(30,1,30,1)
+  area3:AreaP(35,1,35,1)
+  area4:AreaP(40,1,40,1)
+  areaJefe:AreaP(1,1,1,1)
+  areaCompartida:AreaPC(25,25,75,75)
+robots
+  robot robot1
+  variables
+    quienSoy:numero
+    ok:boolean
+    cant:numero
+    gane:boolean
+  comenzar
+    cant:=0
+    RecibirMensaje(quienSoy,rj)
+    RecibirMensaje(ok,rj)
+    mientras(ok)
+      entrar(cant)
+      RecibirMensaje(ok,rj)
+    EnviarMensaje(quienSoy,rj)
+    EnviarMensaje(cant,rj)
+    RecibirMensaje(gane,rj)
+    si(gane = V)
+      Pos(50,50)
+  fin
+  robot robotJefe
+  variables
+    id:numero
+    ok:boolean
+    maxRobot:numero
+    cant1,cant2,cant3,cant4:numero
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(4,r4)
+    repetir 10
+      Random(id,1,4)
+      si id=1
+        EnviarMensaje(V,r1)
+      sino
+        si id=2
+          EnviarMensaje(V,r2)
+        sino
+          si id=3
+            EnviarMensaje(V,r3)
+          sino
+            si id=4
+              EnviarMensaje(V,r4)
+    finalizarRobots
+    recibirCantFlores(cant1,cant2,cant3,cant4)
+    calcularMax(cant1,cant2,cant3,cant4,maxRobot)
+    id:=1
+    repetir 4
+      si id=maxRobot
+        ok:= V
+      sino
+        ok:=F
+      avisar(id,ok)
+      id:=id+1
+    Informar('ganador',maxRobot)   
+  fin
+variables
+  r1: robot1
+  r2:robot1
+  r3:robot1
+  r4:robot1
+  rj:robotJefe
+comenzar
+  AsignarArea(r1,area1)
+  AsignarArea(r1,areaCompartida)
+  AsignarArea(r2,area2)
+  AsignarArea(r2,areaCompartida)
+  AsignarArea(r3,area3)
+  AsignarArea(r3,areaCompartida)
+  AsignarArea(r4,area4)
+  AsignarArea(r4,areaCompartida)
+  AsignarArea(rj,areaJefe)
+  Iniciar(r1,25,1)
+  Iniciar(r2,30,1)
+  Iniciar(r3,35,1)
+  Iniciar(r4,40,1)
+  Iniciar(rj,1,1)
+fin
