@@ -1,0 +1,59 @@
+{Bienvenidos al entorno CMRE.
+Lo siguiente es un código de ejemplo que implementa un
+proceso que recibe un número de avenida como parámetro,
+se posiciona en esa avenida y la recorre.}
+
+programa ejercicio1prac2
+procesos
+  proceso tomarFlores (ES cantFlores:numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      cantFlores:= cantFlores+1
+  fin
+  
+  proceso recorrerAvenida (ES cantFlores:numero)
+  comenzar
+    repetir 9
+      tomarFlores(cantFlores)
+      mover
+  fin
+areas
+  area1: AreaP(1,1,1,10)
+  area2: AreaP(2,11,2,20)
+robots
+  robot robot1
+  variables
+    cantFlores:numero
+    cantMax:numero
+    siEsMax:boolean
+  comenzar
+    cantFlores := 0
+    recorrerAvenida (cantFlores)
+    EnviarMensaje(cantFlores,r2)
+    RecibirMensaje(cantMax,r2)
+    si (cantFlores>cantMax)
+      Informar('diferencia', cantFlores-cantMax)  
+  fin
+  robot robot2
+  variables
+    cantFlores:numero
+    cantMax:numero
+    siEsMax:boolean
+  comenzar
+    cantFlores := 0
+    recorrerAvenida (cantFlores)
+    EnviarMensaje(cantFlores,r1)
+    RecibirMensaje(cantMax,r1)
+    si (cantFlores>cantMax)
+      Informar('diferencia', cantFlores-cantMax)  
+  fin
+variables
+  r1:robot1
+  r2:robot2
+comenzar
+  AsignarArea(r1, area1)
+  AsignarArea(r2,area2)
+  Iniciar(r1,1,1)
+  Iniciar(r2,2,11)
+fin

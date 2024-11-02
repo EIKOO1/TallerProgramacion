@@ -1,0 +1,88 @@
+{Bienvenidos al entorno CMRE.
+Lo siguiente es un código de ejemplo que implementa un
+proceso que recibe un número de avenida como parámetro,
+se posiciona en esa avenida y la recorre.}
+
+programa ejemplo
+procesos
+  proceso contarPapeles(ES cantPapeles:numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      cantPapeles:=cantPapeles+1
+  fin
+  proceso contarFlores(ES cantFlores:numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      cantFlores:=cantFlores+1
+  fin
+  proceso contar(ES cantFlores:numero; ES cantPapeles:numero)
+  comenzar
+    contarFlores(cantFlores)
+    contarPapeles(cantPapeles)
+  fin
+  proceso hacerEscalon(E ancho:numero;E altura:numero;ES cantFlores:numero ;ES cantPapeles:numero)
+  comenzar
+    repetir altura
+      contar(cantFlores,cantPapeles)
+      mover
+    derecha
+    repetir ancho 
+      contar(cantFlores,cantPapeles)
+      mover
+    contar(cantFlores,cantPapeles)
+    repetir 3
+      derecha
+  fin
+areas
+  area1: AreaC (1,1,1,1)
+  area2:AreaP(2,1,6,100)
+  area3:AreaP(7,1,11,100)
+  area4:AreaP(12,1,16,100)
+robots
+  robot robot1
+  variables
+    ancho,altura:numero
+    cant:numero
+    cantFlores:numero
+    cantPapeles:numero
+  comenzar
+    ancho:=1
+    cant:=0
+    repetir 4
+      cantFlores:=0
+      cantPapeles:=0
+      Random(altura,1,5)
+      hacerEscalon(ancho,altura,cantFlores,cantPapeles)
+      si (cantFlores>cantPapeles)
+        cant:=cant+1
+    EnviarMensaje(cant,r4)
+  fin
+  robot jefe
+  variables
+    uno,dos,tres:numero
+  comenzar
+    RecibirMensaje(uno,*)
+    RecibirMensaje(dos,*)
+    RecibirMensaje(tres,*)
+    Informar('primero me llego',uno)
+    Informar('segundo',dos)
+    Informar('tercero',tres)
+  fin
+variables
+  r1: robot1
+  r2:robot1
+  r3:robot1
+  r4:jefe
+comenzar
+  AsignarArea(r1, area2)
+  AsignarArea(r2, area3)
+  AsignarArea(r3, area4)
+  AsignarArea(r4, area1)
+  Iniciar(r4, 1,1)
+  Iniciar(r1, 2,1)
+  Iniciar(r2, 7,1)
+  Iniciar(r3, 12,1)
+  
+fin
