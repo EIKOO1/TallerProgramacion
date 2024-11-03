@@ -1,0 +1,119 @@
+{Bienvenidos al entorno CMRE.
+Lo siguiente es un código de ejemplo que implementa un
+proceso que recibe un número de avenida como parámetro,
+se posiciona en esa avenida y la recorre.}
+
+programa ejemplo
+procesos
+  proceso juntarPapeles(ES cant:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      cant:=cant+1
+  fin
+  proceso juntarFlores(ES cant:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor 
+      cant:=cant+1
+  fin
+  proceso agarrarAlAzar (ES cant:numero; E cantIntentos:numero;E tipoRobot:boolean)
+  variables
+    posCaInicial:numero
+    posAvInicial:numero
+    caRandom:numero
+    avRandom:numero
+  comenzar
+    posCaInicial:=PosCa
+    posAvInicial:=PosAv
+    cant:=0
+    repetir cantIntentos
+      si (tipoRobot = V)
+        Random(avRandom,1,5)
+        Random(caRandom,1,10)
+        BloquearEsquina(avRandom,caRandom)
+        Pos(avRandom,caRandom)
+        juntarFlores(cant)
+        Pos(posAvInicial,posCaInicial)
+        LiberarEsquina(avRandom,caRandom)
+      sino
+        si (tipoRobot = F)
+          Random(avRandom,6,10)
+          Random(caRandom,1,9)
+          BloquearEsquina(avRandom,caRandom)
+          Pos(avRandom,caRandom)
+          juntarPapeles(cant)
+          Pos(posAvInicial,posCaInicial)
+          LiberarEsquina(avRandom,caRandom)
+  fin
+areas
+  areaFloreros:AreaPC(1,1,5,10)
+  iniFloreros:AreaPC(6,10,7,10)
+  areaPapeleros:AreaPC(6,1,10,9)
+  iniPapeleros:AreaPC(8,10,9,10)
+  areaFinal:AreaC(10,10,10,10)
+robots
+  robot robotsFloreros
+  variables
+    cantIntentos:numero
+    cantFlores:numero
+    posAvIni:numero
+    posCaIni:numero
+    tipoRobot:boolean
+  comenzar
+    tipoRobot:=V
+    posAvIni:=PosAv
+    posCaIni:=PosCa
+    cantIntentos:=5
+    agarrarAlAzar(cantFlores,cantIntentos,tipoRobot)
+    repetir cantFlores
+      BloquearEsquina(10,10)
+      Pos(10,10)
+      depositarFlor
+      Pos(posAvIni,posCaIni)
+      LiberarEsquina(10,10)
+  fin
+  robot robotsPapeleros
+  variables
+    cantIntentos:numero
+    cantPapeles:numero
+    posAvIni:numero
+    posCaIni:numero
+    tipoRobot:boolean
+  comenzar
+    cantIntentos:=3
+    tipoRobot:=F
+    posCaIni:=PosCa
+    posAvIni:=PosAv
+    agarrarAlAzar(cantPapeles,cantIntentos,tipoRobot)
+    repetir cantPapeles
+      BloquearEsquina(10,10)
+      Pos(10,10)
+      depositarPapel
+      Pos(posAvIni,posCaIni)
+      LiberarEsquina(10,10)
+  fin 
+variables
+  r1:robotsFloreros
+  r2:robotsFloreros
+  r3:robotsPapeleros
+  r4:robotsPapeleros
+comenzar
+  AsignarArea(r1,iniFloreros)
+  AsignarArea(r2,iniFloreros)
+  AsignarArea(r1,areaFloreros)
+  AsignarArea(r2,areaFloreros)
+  AsignarArea(r3,iniPapeleros)
+  AsignarArea(r4,iniPapeleros)
+  AsignarArea(r3,areaPapeleros)
+  AsignarArea(r4,areaPapeleros)
+  AsignarArea(r1,areaFinal)
+  AsignarArea(r2,areaFinal)
+  AsignarArea(r3,areaFinal)
+  AsignarArea(r4,areaFinal)
+  Iniciar(r1,6,10)
+  Iniciar(r2,7,10)
+  Iniciar(r3,8,10)
+  Iniciar(r4,9,10)
+fin
+  
