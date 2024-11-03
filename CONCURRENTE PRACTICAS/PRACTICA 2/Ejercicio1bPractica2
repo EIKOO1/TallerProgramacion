@@ -15,7 +15,7 @@ procesos
   proceso recorrerAvenida (ES cantFlores:numero)
   comenzar
     tomarFlores(cantFlores)
-    repetir 9
+    repetir 10
       mover
       tomarFlores(cantFlores)
   fin
