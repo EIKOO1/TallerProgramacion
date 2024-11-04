@@ -1,0 +1,151 @@
+{Bienvenidos al entorno CMRE.
+Lo siguiente es un código de ejemplo que implementa un
+proceso que recibe un número de avenida como parámetro,
+se posiciona en esa avenida y la recorre.}
+programa ejemplo
+procesos
+  proceso TomarFlores(ES cantFlores:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      cantFlores:=cantFlores+1
+  fin
+  proceso hacerEscalon(E cantEscalones:numero)
+  comenzar
+    repetir cantEscalones
+      mover
+  fin
+  proceso EscaleraFlores(ES cantFlores:numero)
+  variables
+    cantEscalones:numero
+  comenzar
+    cantEscalones:=5
+    repetir 4
+      hacerEscalon(cantEscalones)
+      derecha
+      TomarFlores(cantFlores)
+      hacerEscalon(cantEscalones) {SE PUEDE MODULARIZAR MAS GENERICO?}
+      repetir 3
+        derecha
+      TomarFlores(cantFlores)
+      cantEscalones:= cantEscalones-1
+  fin
+  proceso EscaleraFlores2(ES cantFlores:numero)
+  variables
+    cantEscalones:numero
+  comenzar
+    cantEscalones:=2
+    mientras (cantEscalones<=5)
+      hacerEscalon(cantEscalones)
+      derecha
+      TomarFlores(cantFlores)
+      hacerEscalon(cantEscalones)
+      repetir 3
+        derecha
+      TomarFlores(cantFlores)
+      cantEscalones:=cantEscalones+1
+  fin
+  proceso tomarPapeles(ES cantPapeles:numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      cantPapeles:=cantPapeles+1
+  fin
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso EscaleraPapeles(E cantPapeles:numero)
+  variables
+    cantEscalones:numero
+  comenzar
+    cantEscalones:=5
+    repetir 4
+      hacerEscalon(cantEscalones)
+      izquierda
+      tomarPapeles(cantPapeles)
+      hacerEscalon(cantEscalones)
+      derecha
+      cantEscalones:= cantEscalones-1
+  fin
+  proceso EscaleraPapeles2(ES cantPapeles:numero)
+  variables
+    cantEscalones:numero
+  comenzar
+    cantEscalones:=2
+    mientras (cantEscalones<=5)
+      hacerEscalon(cantEscalones)
+      izquierda
+      tomarPapeles(cantPapeles)
+      hacerEscalon(cantEscalones)
+      derecha
+      tomarPapeles(cantPapeles)
+      cantEscalones:=cantEscalones+1
+  fin
+areas
+  areaCompartida:AreaPC(1,1,31,100)
+robots
+  robot robotFlores
+  variables
+    cantFlores:numero
+  comenzar
+    cantFlores:=0
+    EscaleraFlores(cantFlores)
+    mover
+    derecha
+    BloquearEsquina(16,1)
+    EnviarMensaje(1,r3)
+    mover
+    repetir 2
+      derecha
+    mover
+    LiberarEsquina(16,1)
+    EscaleraFlores2(cantFlores)
+    Informar(cantFlores)
+    EnviarMensaje(V,r3)
+  fin
+  robot robotPapeles
+  variables
+    cantPapeles:numero
+  comenzar
+    cantPapeles:=0
+    EscaleraPapeles(cantPapeles)
+    mover
+    izquierda
+    BloquearEsquina(16,1)
+    mover
+    EnviarMensaje(2,r3)
+    repetir 2
+      derecha
+    mover
+    LiberarEsquina(16,1)
+    EscaleraPapeles2(cantPapeles)
+    Informar(cantPapeles)
+    EnviarMensaje(V,r3)
+  fin
+  robot robotJefe
+  variables
+    id:numero
+    ganador:numero
+    ok:boolean
+  comenzar
+    RecibirMensaje(id,*)
+    ganador:=id
+    RecibirMensaje(id,*)
+    repetir 2
+      RecibirMensaje(ok,*)
+    Informar(ganador) {ver q pasaria si un robot le manda la id}
+  fin
+variables
+  r1:robotFlores
+  r2:robotPapeles
+  r3:robotJefe
+comenzar
+  AsignarArea(r1, areaCompartida)
+  AsignarArea(r2,areaCompartida)
+  AsignarArea(r3,areaCompartida)
+  Iniciar(r1,1,1)
+  Iniciar(r2,31,1)
+  Iniciar(r3,15,1)
+fin
