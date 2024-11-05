@@ -4,16 +4,29 @@ procesos
   variables
     posAvInicial:numero
     posCaInicial:numero
+    hayFlores:boolean
   comenzar
     posAvInicial:=PosAv
     posCaInicial:=PosCa
     BloquearEsquina(av,ca)
     Pos(av,ca)
-    mientras (HayFlorEnLaEsquina)
+    hayFlores:=F
+    mientras (hayFlores:=F)
+      BloquearEsquina(av,ca)
+      Pos(av,ca)
+      si(HayFlorEnLaEsquina)
+        tomarFlor
+      sino
+        hayFlores:=V
+      Pos(posAvInicial,posCaInicial)
+      LiberarEsquina(av,ca)
+      
+      
+       
       tomarFlor
       cantFlores:=cantFlores+1
       Pos(posAvInicial,posCaInicial)
-      LiberarEsquina(av,ca)
+      LiberarEsquina(av,ca)      {ESTA MAL} {En proceso de cambio}
       BloquearEsquina(av,ca)
       Pos(av,ca)
     Pos(posAvInicial,posCaInicial)
