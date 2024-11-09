@@ -1,0 +1,48 @@
+programa Ejercicio5
+areas
+  area1:AreaPC(4,1,4,100)
+  area2:AreaPC(6,1,6,100)
+  area3:AreaPC(8,1,8,100)
+  area4:AreaPC(10,1,10,100)
+robots
+  robot robot1
+  variables
+    id:numero
+  comenzar
+    cantPapeles:=0
+    RecibirMensaje(id,rj)
+    Corre
+    EnviarMensaje(id,rj)
+    
+    EnviarMensaje(V,rj) {Le envia que temino al jefe}
+  fin
+  robot robotjefe
+  variables
+    id:numero
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3) 
+    EnviarMensaje(4,r4)
+    Repetir 4
+      RecibirMensaje(id,*)
+      si (id=1)
+        RecibirMensaje(cant
+  fin
+  
+ variables
+  r1:robot1
+  r2:robot1
+  r3:robot1
+  r4:robot1
+  rj:robotjefe
+comenzar
+  AsignarArea(r1,area1)
+  AsignarArea(r2,area2)
+  AsignarArea(r3,area3)
+  AsignarArea(r4,area4)
+  Iniciar(r1,4,1)
+  Iniciar(r2,6,1)
+  Iniciar(r3,8,1)
+  Iniciar(r4,10,1)
+fin
