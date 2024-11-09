@@ -7,7 +7,7 @@ procesos
     avActual:numero
   comenzar
     hayPapel:=V
-    mientras hayPapel
+    mientras (hayPapel)& (PosCa<100)
       avActual:=PosAv
       caActual:=PosCa
       BloquearEsquina(11,11)
