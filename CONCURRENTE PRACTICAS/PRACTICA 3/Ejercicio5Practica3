@@ -1,36 +1,88 @@
 programa Ejercicio5
+procesos
+  proceso corre
+  variables
+    hayPapel:boolean
+    caActual:numero
+    avActual:numero
+  comenzar
+    hayPapel:=V
+    mientras hayPapel
+      avActual:=PosAv
+      caActual:=PosCa
+      BloquearEsquina(11,11)
+      Pos(11,11)
+      si (HayPapelEnLaEsquina)
+        tomarPapel
+        Pos(avActual,caActual)
+        LiberarEsquina(11,11)
+        depositarPapel
+        mover
+      sino
+        hayPapel:=F
+        Pos(avActual,caActual)
+        LiberarEsquina(11,11)
+  fin
+  proceso actualizarMax(E id:numero; E ca:numero;ES maxCa:numero;ES idmax:numero)
+  comenzar
+    si (ca>maxCa)
+      maxCa:=ca
+      idmax:=id
+  fin
 areas
-  area1:AreaPC(4,1,4,100)
-  area2:AreaPC(6,1,6,100)
-  area3:AreaPC(8,1,8,100)
-  area4:AreaPC(10,1,10,100)
+  area1:AreaP(4,1,4,100)
+  area2:AreaP(6,1,6,100)
+  area3:AreaP(8,1,8,100)
+  area4:AreaP(10,1,10,100)
+  areajefe:AreaP(1,1,1,1)
+  areapapeles:AreaP(11,11,11,11)
 robots
   robot robot1
   variables
     id:numero
+    ca:numero
   comenzar
-    cantPapeles:=0
     RecibirMensaje(id,rj)
-    Corre
+    corre
+    ca:=PosCa
     EnviarMensaje(id,rj)
-    
-    EnviarMensaje(V,rj) {Le envia que temino al jefe}
+    EnviarMensaje(ca,rj)
+    EnviarMensaje(V,rj)
   fin
   robot robotjefe
   variables
     id:numero
+    ca:numero
+    maxCa:numero
+    idmax:numero
+    termine:boolean
   comenzar
+    maxCa:= -1
     EnviarMensaje(1,r1)
     EnviarMensaje(2,r2)
     EnviarMensaje(3,r3) 
     EnviarMensaje(4,r4)
-    Repetir 4
+    repetir 4
       RecibirMensaje(id,*)
-      si (id=1)
-        RecibirMensaje(cant
+      si(id=1)
+        RecibirMensaje(ca,r1)
+        RecibirMensaje(termine,r1)
+      sino  
+        si(id=2)
+          RecibirMensaje(ca,r2)
+          RecibirMensaje(termine,r2)
+        sino
+          si(id=3)
+            RecibirMensaje(ca,r3)
+            RecibirMensaje(termine,r3)
+          sino
+            si(id=4)
+              RecibirMensaje(ca,r4)
+              RecibirMensaje(termine,r4)
+      actualizarMax(id,ca,maxCa,idmax) 
+    Informar(idmax)
   fin
-  
- variables
+variables
   r1:robot1
   r2:robot1
   r3:robot1
@@ -41,8 +93,14 @@ comenzar
   AsignarArea(r2,area2)
   AsignarArea(r3,area3)
   AsignarArea(r4,area4)
+  AsignarArea(rj,areajefe)
+  AsignarArea(r1,areapapeles)
+  AsignarArea(r2,areapapeles)
+  AsignarArea(r3,areapapeles)
+  AsignarArea(r4,areapapeles)
   Iniciar(r1,4,1)
   Iniciar(r2,6,1)
   Iniciar(r3,8,1)
   Iniciar(r4,10,1)
+  Iniciar(rj,1,1)
 fin
