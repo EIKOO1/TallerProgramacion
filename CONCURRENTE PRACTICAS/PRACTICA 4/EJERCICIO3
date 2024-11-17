@@ -1,0 +1,90 @@
+
+programa ejemplo
+procesos
+  proceso tomarpapeles
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+  fin
+areas
+  area1:AreaP (1,1,1,100)
+  area2:AreaP(2,1,2,100)
+  area3:AreaP(3,1,3,100)
+robots
+  robot robot1
+  variables
+    ok:boolean
+  comenzar
+    repetir 4
+      mover
+      tomarpapeles
+    EnviarMensaje(F,r2)
+    EnviarMensaje(F,r3)
+    repetir 2
+      RecibirMensaje(ok,*)  
+    repetir 19
+      repetir 5
+        tomarpapeles
+        mover
+      tomarpapeles
+      EnviarMensaje(F,r2)
+      EnviarMensaje(F,r3)
+      repetir 2
+        RecibirMensaje(ok,*)     
+  fin
+  robot robot2
+  variables
+    ok:boolean
+  comenzar
+    repetir 4
+      mover
+      tomarpapeles
+    EnviarMensaje(F,r1)
+    EnviarMensaje(F,r3)
+    repetir 2
+      RecibirMensaje(ok,*)  
+    tomarpapeles
+    repetir 19
+      repetir 5
+        tomarpapeles
+        mover
+      tomarpapeles
+      EnviarMensaje(F,r1)
+      EnviarMensaje(F,r3)
+      repetir 2
+        RecibirMensaje(ok,*)     
+  fin
+  robot robot3
+  variables
+    ok:boolean
+  comenzar
+    repetir 4
+      tomarpapeles
+      mover
+    tomarpapeles
+    EnviarMensaje(F,r1)
+    EnviarMensaje(F,r2)
+    repetir 2
+      RecibirMensaje(ok,*)  
+    repetir 19
+      repetir 5
+        tomarpapeles
+        mover
+      tomarpapeles
+      EnviarMensaje(F,r1)
+      EnviarMensaje(F,r2)
+      repetir 2
+        RecibirMensaje(ok,*)     
+  fin
+variables
+  r1:robot1
+  r2:robot2
+  r3:robot3
+comenzar
+  AsignarArea(r1, area1)
+  AsignarArea(r2, area2)
+  AsignarArea(r3, area3)
+  Iniciar(r1,1,1)
+  Iniciar(r2,2,1)
+  Iniciar(r3,3,1)
+fin
