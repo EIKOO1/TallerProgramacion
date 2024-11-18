@@ -1,10 +1,27 @@
 {Bienvenidos al entorno CMRE.
-Lo siguiente es un código de ejemplo que implementa un
-proceso que recibe un número de avenida como parámetro,
+Lo siguiente es un cÃ³digo de ejemplo que implementa un
+proceso que recibe un nÃºmero de avenida como parÃ¡metro,
 se posiciona en esa avenida y la recorre.}
 
 programa ejemplo
 procesos
+  proceso recogerFlores
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+  fin
+  proceso recogerPapeles
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+  fin
+  proceso vaciarBolsa
+  comenzar
+    mientras HayFlorEnLaBolsa
+      depositarFlor
+    mientras HayPapelEnLaBolsa
+      depositarPapel
+  fin
 areas
   areaCompartida: AreaC (2,2,100,100)
   areaslave:AreaP(2,1,2,1)
@@ -27,6 +44,7 @@ robots
       avenidaIni:=PosAv
       calleIni:=PosCa
       BloquearEsquina(avenidaTarea,calleTarea)
+      Pos(avenidaTarea,calleTarea)
       si (tarea = 1)
         recogerFlores
       sino
@@ -34,19 +52,47 @@ robots
           recogerPapeles
         sino
           vaciarBolsa
-      Pos(avenidaIni,CalleIni)
+      Pos(avenidaIni,calleIni)
       LiberarEsquina(avenidaTarea,calleTarea)
+      EnviarMensaje(V,rj)
       RecibirMensaje(tarea,rj)       
   fin
   robot robotjefe 
   variables
+    tarea:numero
+    id:numero
+    ok:boolean
+    avenidaAle,calleAle:numero
   comenzar
+    repetir 10
+      Random(id,1,2)
+      Random(tarea,1,3)
+      Random(avenidaAle,2,100)
+      Random(calleAle,2,100)
+      si (id=1)
+        EnviarMensaje(tarea,r1)
+        EnviarMensaje(avenidaAle,r1)
+        EnviarMensaje(calleAle,r1)
+      sino
+        EnviarMensaje(tarea,r2)
+        EnviarMensaje(avenidaAle,r2)
+        EnviarMensaje(calleAle,r2)
+      RecibirMensaje(ok,*)
+    EnviarMensaje(4,r1)
+    EnviarMensaje(4,r2)
   fin
 variables
-  r1: robotslave
+  r1:robotslave
   r2:robotslave
   rj:robotjefe
 comenzar
-  AsignarArea(r1, ciudad)
-  Iniciar(r1, 1,1)
+  AsignarArea(r1,areaslave)
+  AsignarArea(r2,areaslave2)
+  AsignarArea(r2,areaCompartida)
+  AsignarArea(r1,areaCompartida)
+  AsignarArea(rj,areaJefe)
+  Iniciar(r1,2,1)
+  Iniciar(r2,3,1)
+  Iniciar(rj,1,1)
+    
 fin

@@ -1,0 +1,106 @@
+{Bienvenidos al entorno CMRE.
+Lo siguiente es un código de ejemplo que implementa un
+proceso que recibe un número de avenida como parámetro,
+se posiciona en esa avenida y la recorre.}
+
+programa ejemplo
+procesos
+  proceso recogerFlores (ES cantFlores:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      cantFlores:=cantFlores+1
+  fin
+  proceso recogerPapeles(ES cantPapeles:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      cantPapeles:=cantPapeles+1
+  fin
+areas
+  area1:AreaP(2,1,2,100)
+  area2:AreaP(3,1,3,100)
+  area3:AreaP(98,1,98,100)
+  area4:AreaP(99,1,99,100) 
+  areaCordinador:AreaP(1,1,1,1)
+robots
+  robot robotRojos
+  variables
+    cantFlores:numero
+    id:numero
+  comenzar
+    cantFlores:= 0
+    RecibirMensaje(id,rc)
+    repetir 99
+      recogerFlores (cantFlores)
+      mover
+    recogerFlores(cantFlores)
+    EnviarMensaje(id,rc)
+    EnviarMensaje(cantFlores,rc)
+  fin
+  robot robotAzules
+  variables
+    cantPapeles:numero
+    id:numero
+  comenzar
+    cantPapeles:= 0
+    RecibirMensaje(id,rc)
+    repetir 99
+      recogerPapeles(cantPapeles)
+      mover
+    recogerPapeles(cantPapeles)
+    EnviarMensaje(id,rc)
+    EnviarMensaje(cantPapeles,rc)
+  fin
+  robot robotCordinador
+  variables
+    id:numero
+    cantf:numero
+    cantp:numero
+    aux:numero
+  comenzar
+    cantf:=0
+    cantp:=0
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(4,r4)
+    repetir 4
+      RecibirMensaje(id,*)
+      si (id=1)
+        RecibirMensaje(aux,r1)
+        cantf:=cantf+aux
+      sino
+        si id=2
+          RecibirMensaje(aux,r2)
+          cantf:=cantf+aux        
+        sino
+          si id=3
+            RecibirMensaje(aux,r3)
+            cantp:=cantp+aux       
+          sino
+            RecibirMensaje(aux,r4)
+            cantp:=cantp+aux                      
+    si (cantf>cantp)
+      Informar(1)
+    sino
+      Informar(2)
+  fin
+variables
+  r1: robotRojos
+  r2: robotRojos
+  r3: robotAzules
+  r4: robotAzules
+  rc: robotCordinador
+comenzar
+  AsignarArea(r1, area1)
+  AsignarArea(r2,area2)
+  AsignarArea(r3,area3)
+  AsignarArea(r4,area4)
+  AsignarArea(rc,areaCordinador)
+  Iniciar(r1,2,1)
+  Iniciar(r2,3,1)  
+  Iniciar(r3,98,1)
+  Iniciar(r4,99,1)
+  Iniciar(rc,1,1)
+fin
