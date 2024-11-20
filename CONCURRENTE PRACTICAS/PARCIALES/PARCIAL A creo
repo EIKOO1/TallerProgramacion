@@ -1,0 +1,103 @@
+{Bienvenidos al entorno CMRE.
+Lo siguiente es un código de ejemplo que implementa un
+proceso que recibe un número de avenida como parámetro,
+se posiciona en esa avenida y la recorre.}
+
+programa ejemplo
+procesos
+  proceso dejarFlores
+  variables
+    avIni:numero
+    caIni:numero
+  comenzar
+    avIni:=PosAv
+    caIni:=PosCa
+    mientras (HayFlorEnLaBolsa)
+      BloquearEsquina(99,99)
+      Pos(99,99)
+      depositarFlor
+      Pos(avIni,caIni)
+      LiberarEsquina(99,99)
+  fin
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso hacerEscalon(ES cantVacios:numero)
+  variables
+    ok:boolean
+  comenzar 
+    ok:=V
+    repetir 2
+      si(HayFlorEnLaEsquina)
+        mientras(HayFlorEnLaEsquina)
+          tomarFlor
+        ok:=F
+      mover
+    derecha
+    repetir 2
+      si(HayFlorEnLaEsquina)
+        mientras(HayFlorEnLaEsquina)
+          tomarFlor
+        ok:=F
+      mover
+    izquierda
+    si(ok=V)
+      cantVacios:=cantVacios+1
+  fin
+areas
+  area1: AreaP(2,1,12,11)
+  area2:AreaP(20,1,30,11)
+  area3:AreaP(40,1,50,11)
+  depositoFlores:AreaPC(99,99,99,99)
+  areaf:AreaP(1,1,1,1)
+robots
+  robot robot1
+  variables
+    escalones:numero
+    cantVacios:numero
+  comenzar
+    cantVacios:=0
+    RecibirMensaje(escalones,rf)
+    repetir escalones
+      hacerEscalon(cantVacios)
+    dejarFlores
+    EnviarMensaje(cantVacios,rf)
+  fin
+  robot robotFiscalizador
+  variables
+    escalones:numero
+    cant:numero
+    aux:numero
+  comenzar
+    Random(escalones,1,5)
+    EnviarMensaje(escalones,r1)
+    Random(escalones,1,5)
+    EnviarMensaje(escalones,r2)
+    Random(escalones,1,5)
+    EnviarMensaje(escalones,r3)
+    cant:=0
+    repetir 3
+      RecibirMensaje(aux,*)
+      cant:=cant+aux
+    Informar(cant)
+  fin
+variables
+  r1:robot1
+  r2:robot1
+  r3:robot1
+  rf:robotFiscalizador
+comenzar
+  AsignarArea(r1, area1)
+  AsignarArea(r2, area2)
+  AsignarArea(r3, area3)
+  AsignarArea(rf, areaf)
+  AsignarArea(r1,depositoFlores)
+  AsignarArea(r2,depositoFlores)
+  AsignarArea(r3,depositoFlores)
+  Iniciar(r1,2,1)
+  Iniciar(r2,20,1)
+  Iniciar(r3,40,1)
+  Iniciar(rf,1,1)
+fin
