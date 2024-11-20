@@ -1,0 +1,141 @@
+{Bienvenidos al entorno CMRE.
+Lo siguiente es un código de ejemplo que implementa un
+proceso que recibe un número de avenida como parámetro,
+se posiciona en esa avenida y la recorre.}
+
+programa ejemplo
+procesos
+  proceso DepositarFlores(E cantFlores:numero; E av:numero;E ca:numero)
+  comenzar
+    mientras (cantFlores>0)
+      BloquearEsquina(5,5)
+      Pos(5,5)
+      depositarFlor
+      Pos(av,ca)
+      LiberarEsquina(5,5)
+      cantFlores:=cantFlores-1
+  fin
+  proceso vaciarEsquina(ES cantFlores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      cantFlores:=cantFlores+1
+  fin
+  proceso mandarCantIntentos
+  variables
+    intentos:numero
+  comenzar
+    Random(intentos,3,6)
+    EnviarMensaje(intentos,r1)
+    Random(intentos,3,6)
+    EnviarMensaje(intentos,r2)
+    Random(intentos,3,6)
+    EnviarMensaje(intentos,r3)
+  fin
+  proceso juntarFlores
+  comenzar
+    Pos (5,5)
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+  fin
+  proceso calcularMax(E cant1:numero;E cant2:numero;E cant3:numero;ES maxid:numero)
+  variables
+    max:numero
+  comenzar
+    max:=-1
+    si (cant1>max)
+      max:=cant1
+      maxid:=1
+    si cant2>max
+      max:=cant2
+      maxid:=2
+    si cant3>max
+      max:=cant3 
+      maxid:=3
+    
+  fin
+areas
+  area1: AreaPC (10,10,30,30)
+  arear1:AreaP(1,1,1,1)
+  arear2:AreaP(2,1,2,1)
+  arear3:AreaP(3,1,3,1)
+  areaDeposito:AreaC(5,5,5,5)
+  areaFiscalizador:AreaP(9,9,9,9)
+robots
+  robot robot1
+  variables
+    id:numero
+    intentos:numero
+    avIni:numero
+    caIni:numero
+    avRandom:numero
+    caRandom:numero
+    cantFlores:numero
+  comenzar
+    RecibirMensaje(id,rf)
+    RecibirMensaje(intentos,rf)
+    avIni:=PosAv
+    caIni:=PosCa
+    cantFlores:=0
+    mientras(intentos>0)
+      Random(avRandom,10,30)
+      Random(caRandom,10,30)
+      BloquearEsquina(avRandom,caRandom)
+      Pos(avRandom,caRandom)
+      vaciarEsquina(cantFlores)
+      Pos(avIni,caIni)
+      LiberarEsquina(avRandom,caRandom)
+      intentos:=intentos-1
+    DepositarFlores(cantFlores,avIni,caIni)
+    EnviarMensaje(id,rf)
+    EnviarMensaje(cantFlores,rf)
+  fin
+  robot robotFiscalizador
+  variables
+    id:numero
+    cant1,cant2,cant3:numero
+    maxid:numero
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    mandarCantIntentos
+    repetir 3
+      RecibirMensaje(id,*)
+      si (id=1)
+        RecibirMensaje(cant1,r1)
+      sino
+        si(id=2)
+          RecibirMensaje(cant2,r2)
+        sino
+          RecibirMensaje(cant3,r3)
+    juntarFlores
+    calcularMax(cant1,cant2,cant3,maxid)
+    Informar(maxid)
+    Informar(cant1)
+    Informar(cant2)
+    Informar(cant3)
+  fin
+variables
+  r1:robot1
+  r2:robot1
+  r3:robot1
+  rf:robotFiscalizador
+comenzar
+  AsignarArea(r1, arear1)
+  AsignarArea(r2, arear2)
+  AsignarArea(r3, arear3)
+  AsignarArea(rf, areaFiscalizador)
+  AsignarArea(r1, area1)
+  AsignarArea(r2, area1)
+  AsignarArea(r3, area1)
+  AsignarArea(r1,areaDeposito)
+  AsignarArea(r2,areaDeposito)
+  AsignarArea(r3,areaDeposito)
+  AsignarArea(rf,areaDeposito)
+  Iniciar(r1, 1,1)
+  Iniciar(r2, 2,1)
+  Iniciar(r3, 3,1)
+  Iniciar(rf,9,9)
+  
+fin
