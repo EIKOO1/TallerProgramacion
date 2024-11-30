@@ -1,0 +1,137 @@
+programa Villca_Facundo
+procesos
+  proceso recorrerJuntando
+  comenzar
+    Pos(20,1)
+    repetir 99  {PARA RECORRER TODA LA AVENIDA JUNTANDO}
+      mientras HayFlorEnLaEsquina   
+        tomarFlor
+      mientras HayPapelEnLaEsquina
+        tomarPapel
+      mover
+      
+    mientras HayFlorEnLaEsquina   {PARA LA ULTIMA ESQUINA DE LA AVENIDA 20}
+      tomarFlor
+    mientras HayPapelEnLaEsquina
+      tomarPapel 
+  fin
+  proceso actualizarMax(ES max:numero;E aux:numero;E id:numero;ES maxid:numero)
+  comenzar
+    si aux>max
+      max:=aux
+      maxid:=id
+  fin
+  proceso recogerObjetos(ES cantFlores:numero;ES cantPapeles:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      cantFlores:=cantFlores+1
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      cantPapeles:=cantPapeles+1
+  fin
+  proceso depositarObjetos(E cantFlores:numero ;E cantPapeles:numero;E calle:numero)
+  variables
+    caIni,avIni:numero
+  comenzar {como es DE A UNA}
+    caIni:=PosCa
+    avIni:=PosAv
+    repetir cantFlores   {deja DE A UNA LA CANT FLORES}
+      BloquearEsquina(20,calle)
+      Pos(20,calle)      
+      depositarFlor
+      Pos(avIni,caIni)
+      LiberarEsquina(20,calle)
+    repetir cantPapeles  {DEJA DE A UN PAPEL}
+      BloquearEsquina(20,calle)
+      Pos(20,calle)
+      depositarPapel
+      Pos(avIni,caIni)
+      LiberarEsquina(20,calle)
+  fin
+  proceso recorrerAvenida(ES cantObjetos:numero;ES id:numero)
+  variables
+    cantFlores,calle,cantPapeles:numero
+  comenzar
+    cantFlores:=0
+    cantPapeles:=0
+    repetir 99
+      recogerObjetos(cantFlores,cantPapeles)   {recorre la avenida juntando flores y papeles}
+      mover
+    recogerObjetos(cantFlores,cantPapeles)  {ultima esquina}
+    EnviarMensaje(id,rc)   {envia que termino la avenida}
+    EnviarMensaje(V,rc)    {manda para q el mientras del cordinador}
+    RecibirMensaje(calle,rc) {recibe la calle para la avenida 20}
+    cantObjetos:=cantObjetos+cantPapeles+cantFlores {suma al total las floresypapeles juntadas}
+    depositarObjetos(cantFlores,cantPapeles,calle) {deposita flores y papeles de esa avenida}
+  fin
+areas
+  area1:AreaP(4,1,7,100)
+  area2:AreaP(8,1,11,100)
+  area3:AreaP(1,1,1,1)
+  areaCom:AreaC(20,1,20,100)
+robots
+  robot robot1
+  variables
+    id:numero
+    cantObjetos:numero
+  comenzar
+    cantObjetos:=0
+    RecibirMensaje(id,rc)
+    repetir 3
+      recorrerAvenida(cantObjetos,id)
+      Pos(PosAv+1,1) {Para que siga las 3 veces}
+    recorrerAvenida(cantObjetos,id)
+    EnviarMensaje(id,rc) {manda la id}
+    EnviarMensaje(F,rc) {La ultima ya le dice q no }
+    EnviarMensaje(cantObjetos,rc) {envia la cant total flores+papeles}
+  fin
+  robot robotCordinador
+  variables
+    id:numero
+    ok1,ok2:boolean
+    aux:numero
+    max:numero
+    calle:numero
+    maxid:numero
+  comenzar
+    max:=0
+    EnviarMensaje(1,r1)    {envia ics}
+    EnviarMensaje(2,r2)
+    ok1:=V
+    ok2:=V
+    mientras ok1|ok2   {mientras sea verdadero q los 2 o 1 no llego al final}
+      RecibirMensaje(id,*) 
+      Random(calle,1,100) {aleatorio}
+      si id=1 {si es el robot 1}
+        RecibirMensaje(ok1,r1) {recibimo la condicion si no termino le mando la calle}
+        si ok1
+          EnviarMensaje(calle,r1) {si es verdadero le mando la calle}
+        sino
+          RecibirMensaje(aux,r1) {si termino recibo la cantidad de objetos juntados}
+          actualizarMax(max,aux,id,maxid) {actualizo maximo}
+      sino
+        RecibirMensaje(ok2,r2) 
+        si ok2
+          EnviarMensaje(calle,r2)
+        sino
+          RecibirMensaje(aux,r2)
+          actualizarMax(max,aux,id,maxid)
+    recorrerJuntando    {recorre}
+    Informar(maxid)     {informa que robot juntó mas objetos}
+  fin
+variables
+  r1:robot1    
+  r2:robot1
+  rc:robotCordinador
+comenzar
+  AsignarArea(r1,area1)
+  AsignarArea(r2,area2)
+  AsignarArea(rc,area3)
+  AsignarArea(r1,areaCom)
+  AsignarArea(r2,areaCom)
+  AsignarArea(rc,areaCom)
+  Iniciar(r1,4,1)
+  Iniciar(r2,8,1)
+  Iniciar(rc,1,1)
+fin
